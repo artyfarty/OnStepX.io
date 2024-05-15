@@ -47,6 +47,7 @@
 #define FirmwareVersionPatch        "a"    // for example major.minor patch: 10.03c
 #define FirmwareVersionConfig       6      // internal, for tracking configuration file changes
 
+#include "Arduino.h"
 #include "src/Common.h"
 NVS nv;
 #include "src/Validate.h"

@@ -12,6 +12,11 @@
 */
 //      Parameter Name              Value   Default  Notes                                                                      Hint
 
+// If you want to keep your config changes out of git, you can include an external copy of the file
+#if __has_include("Extended.userconfig.h")
+    #include "Extended.userconfig.h"
+#else 
+
 // =================================================================================================================================
 // CONTROLLER ======================================================================================================================
 
@@ -35,3 +40,4 @@
                                           //              ***     WEAR AND DAMAGE THE MICROCONTROLLER NV SUBSYSTEM !!!        ***
 
 // ---------------------------------------------------------------------------------------------------------------------------------
+#endif
