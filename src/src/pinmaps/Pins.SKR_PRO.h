@@ -40,7 +40,7 @@
   #define ADDON_GPIO0_PIN       PF14             // ESP8266 GPIO0
 #endif
 #ifndef ADDON_RESET_PIN
-  #define ADDON_RESET_PIN       PG1              // ESP8266 RST
+  #define ADDON_RESET_PIN       PG0              // ESP8266 RST
 #endif
 
 #define HEATER0_PIN             PB1              // Connector Labeled HEAT0
