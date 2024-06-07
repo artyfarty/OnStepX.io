@@ -503,7 +503,11 @@ void Focuser::monitor() {
           } else tcfSteps[index] = 0;
 
           if (homing[index]) {
+            #if AXIS4_HOME_0 == ON
+            long p = 0;
+            #else
             long p = round((axes[index]->settings.limits.max + axes[index]->settings.limits.min)/2.0F)*axes[index]->getStepsPerMeasure();
+            #endif
             axes[index]->resetPositionSteps(p);
             axes[index]->setBacklash(getBacklash(index));
             homing[index] = false;
