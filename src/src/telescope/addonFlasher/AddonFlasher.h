@@ -12,7 +12,7 @@
       void go(bool timeout = true);
 
       // set the addon for run mode
-      void run(bool setSerial = false);
+      void resume(bool setSerial = false);
 
       // set the addon for flash mode
       void flash();
@@ -23,6 +23,8 @@
       // monitors for flash button press
       void poll();
     private:
+      bool passA();
+      bool passB();
   };
 
   extern AddonFlasher addonFlasher;

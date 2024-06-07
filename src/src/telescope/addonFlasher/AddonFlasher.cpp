@@ -25,13 +25,40 @@ extern HardwareSerial HWSerialB;
     pinModeEx(ADDON_GPIO0_PIN, OUTPUT);
     pinModeEx(ADDON_RESET_PIN, OUTPUT);
 
-    run();
+    resume();
 
     #if ADDON_TRIGR_PIN != OFF
       pinModeEx(ADDON_TRIGR_PIN, INPUT);
       VF("MSG: AddonFlasher, trigger pin monitor (rate 100ms priority 5)... ");
       if (tasks.add(100, 0, true, 5, addonFlasherWrapper, "adonTgr")) { VLF("success"); } else { VLF("FAILED!"); }
     #endif
+  }
+
+  bool AddonFlasher::passA() {
+    // read from port 1, send to port 0:
+    if (SERIAL_PASSTHROUGH.available()) {
+      int inByte = SERIAL_PASSTHROUGH.read();
+      delayMicroseconds(5);
+      SERIAL_A.write(inByte);
+      delayMicroseconds(5);
+      if (millis() > lastActivity) lastActivity = millis();
+
+      return true;
+    }
+    return false;
+  }
+
+  bool AddonFlasher::passB() {
+    // read from port 0, send to port 1:
+    if (SERIAL_A.available()) {
+      int inByte = SERIAL_A.read();
+      delayMicroseconds(5);
+      SERIAL_PASSTHROUGH.write(inByte);
+      delayMicroseconds(5);
+      if (millis() > lastActivity) lastActivity = millis();
+      return true;
+    }
+    return false;
   }
 
   void AddonFlasher::go(bool timeout) {
@@ -41,36 +68,25 @@ extern HardwareSerial HWSerialB;
     VLF("MSG: AddonFlasher, activating serial passthrough...");
 
     // so we have a total of 1.5 minutes to start the upload
-    unsigned long lastRead = millis() + 85000;
+    unsigned long lastActivity = millis() + SERIAL_B_ESP_FLASHING_START_TIMEOUT;
+    bool A = true; // always prioritize last comms direction
     while (true) {
-      // read from port 1, send to port 0:
-      if (SERIAL_PASSTHROUGH.available()) {
-        int inByte = SERIAL_PASSTHROUGH.read();
-        delayMicroseconds(5);
-        SERIAL_A.write(inByte);
-        delayMicroseconds(5);
+      if (A) {
+        A = passA();
+      } else {
+        A = !passB();
       }
 
-      // read from port 0, send to port 1:
-      if (SERIAL_A.available()) {
-        int inByte = SERIAL_A.read();
-        delayMicroseconds(5);
-        SERIAL_PASSTHROUGH.write(inByte);
-        delayMicroseconds(5);
-        if (millis() > lastRead) lastRead = millis();
-      }
-      //tasks.yield();
-
-      // wait 5 seconds w/no traffic before resuming normal operation
-      if (timeout && (long)(millis() - lastRead) > 5000) break;
+      // wait SERIAL_B_ESP_FLASHING_DATA_TIMEOUT seconds w/no traffic before resuming normal operation
+      if (timeout && (long)(millis() - lastActivity) > SERIAL_B_ESP_FLASHING_DATA_TIMEOUT) break;
     }
     VLF("MSG: AddonFlasher, serial passthrough deactivated");
 
     // back to run mode and normal serial comms
-    run(true);
+    resume(true);
   }
 
-  void AddonFlasher::run(bool setSerial) {
+  void AddonFlasher::resume(bool setSerial) {
     VLF("MSG: AddonFlasher, setting addon run mode");
 
     // enter run mode
