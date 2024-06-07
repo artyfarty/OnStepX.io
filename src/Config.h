@@ -267,6 +267,8 @@
 // =================================================================================================================================
 // FOCUSERS ========================================================================================================================
 
+#define FOCUSER_HOME_POSITION         H_MIDDLE // H_MIDDLE, Position for focuser "home". H_MIN, H_MIDDLE, H_MAX               Option
+
 // Driver models (Step/Dir and Servo) many have specific requirements so be sure to follow the link below to help learn about these.
 // Typically: A4988, DRV8825, LV8729, S109, TMC2130S, etc.
 

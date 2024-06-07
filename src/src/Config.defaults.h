@@ -1040,6 +1040,10 @@
 #define FOCUSER_BUTTON_MOVE_RATE      0                           // focuser button move rate, 0 uses last set or specify fixed rate in um/sec
 #endif
 
+#ifndef FOCUSER_HOME_POSITION
+#define FOCUSER_HOME_POSITION         H_MIDDLE                           // focuser button move rate, 0 uses last set or specify fixed rate in um/sec
+#endif
+
 // -----------------------------------------------------------------------------------
 // focuser settings, FOCUSER1
 #ifndef AXIS4_DRIVER_MODEL
