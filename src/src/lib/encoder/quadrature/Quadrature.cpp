@@ -4,7 +4,8 @@
 
 #if AXIS1_ENCODER == AB || AXIS2_ENCODER == AB || AXIS3_ENCODER == AB || \
     AXIS4_ENCODER == AB || AXIS5_ENCODER == AB || AXIS6_ENCODER == AB || \
-    AXIS7_ENCODER == AB || AXIS8_ENCODER == AB || AXIS9_ENCODER == AB
+    AXIS7_ENCODER == AB || AXIS8_ENCODER == AB || AXIS9_ENCODER == AB || \
+    (ENCODER_FOC_CONTROL == ON && ENCODER_FOC_CONTROL_ENCODER_TYPE == AB)
 
 Quadrature *quadratureInstance[9];
 
@@ -51,6 +52,11 @@ Quadrature *quadratureInstance[9];
 #if AXIS9_ENCODER == AB
   IRAM_ATTR void quadrature_A_Axis9() { quadratureInstance[8]->A(AXIS9_ENCODER_A_PIN); }
   IRAM_ATTR void quadrature_B_Axis9() { quadratureInstance[8]->B(AXIS9_ENCODER_B_PIN); }
+#endif
+
+#if (ENCODER_FOC_CONTROL == ON && ENCODER_FOC_CONTROL_ENCODER_TYPE == AB)
+  IRAM_ATTR void quadrature_A_EncFocuser() { quadratureInstance[ENCODER_FOC_CONTROL_ENCODER_AXIS]->A(ENCODER_FOC_CONTROL_ENCODER_PINA); }
+  IRAM_ATTR void quadrature_B_EncFocuser() { quadratureInstance[ENCODER_FOC_CONTROL_ENCODER_AXIS]->B(ENCODER_FOC_CONTROL_ENCODER_PINB); }
 #endif
 
 // for example:
@@ -129,6 +135,12 @@ void Quadrature::init() {
       case 9:
         attachInterrupt(digitalPinToInterrupt(APin), quadrature_A_Axis9, CHANGE);
         attachInterrupt(digitalPinToInterrupt(BPin), quadrature_B_Axis9, CHANGE);
+      break;
+    #endif
+    #if (ENCODER_FOC_CONTROL == ON && ENCODER_FOC_CONTROL_ENCODER_TYPE == AB)
+      case ENCODER_FOC_CONTROL_ENCODER_AXIS:
+        attachInterrupt(digitalPinToInterrupt(APin), quadrature_A_EncFocuser, CHANGE);
+        attachInterrupt(digitalPinToInterrupt(BPin), quadrature_B_EncFocuser, CHANGE);
       break;
     #endif
   }
