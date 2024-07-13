@@ -11,6 +11,7 @@
 */
 
 // =================================================================================================================================
+#pragma once
 
 #if ENCODER_FOC_CONTROL == ON
 #include "encoderFocControl/EncoderFocControl.h"

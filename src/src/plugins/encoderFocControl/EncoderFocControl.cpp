@@ -1,6 +1,7 @@
 //
 // Created by artyfarty on 13.07.2024.
 //
+#if ENCODER_FOC_CONTROL == ON
 
 #include "EncoderFocControl.h"
 
@@ -43,10 +44,10 @@ void EncoderFocControl::init() {
 
 void EncoderFocControl::loop() {
   long newPos = encControlAxis.read();
-  unsigned long newTime = millis();
-  //VF("MSG: encPos = "); VL(newPos);
+  VF("MSG: encPos = "); VL(newPos);
   if (newPos == INT32_MAX) {
     enFault = true;
+    VLF("MSG: Encoder fault");
     newPos = 0;
     return;
   } else enFault = false;
@@ -71,3 +72,5 @@ void EncoderFocControl::loop() {
 }
 
 EncoderFocControl encoderFocControl;
+
+#endif
