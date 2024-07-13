@@ -6,7 +6,7 @@
 #endif
 
 #ifndef ENCODER_FOC_CONTROL_DIR
-#define ENCODER_FOC_CONTROL__DIR 1
+#define ENCODER_FOC_CONTROL_DIR 1
 #endif
 
 #ifndef ENCODER_FOC_CONTROL_ENCODER_TYPE
@@ -20,8 +20,6 @@
 #ifndef ENCODER_FOC_CONTROL_POLLING_RATE_MS
 #define ENCODER_FOC_CONTROL_POLLING_RATE_MS 150
 #endif
-
-#define ENCODER_FOC_CONTROL_PREV_POSITIONS 3
 
 #if ENCODER_FOC_CONTROL_ENCODER_TYPE == AB || ENCODER_FOC_CONTROL_ENCODER_TYPE == AB_ESP32
   #ifndef ENCODER_FOC_CONTROL_ENCODER_PINA
@@ -40,11 +38,17 @@ class EncoderFocControl {
 public:
     // the initialization method must be present and named: void init();
     void init();
-
     void loop();
 
 private:
+    bool enFault = false;
 
+    long prevPos;
+    long posDiff;
+
+    bool should_slew;
+
+    char fp_cmd[40];
 };
 
 extern EncoderFocControl encoderFocControl;
