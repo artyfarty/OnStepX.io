@@ -197,6 +197,8 @@ ICACHE_RAM_ATTR void Quadrature::A(const int16_t pin) {
     case 0b1111: dir = 0; error = true; break; // skipped pulse use last dir (way too fast if this is happening)
   }
   count += dir;
+
+    //VF("Aint warn="); V(warn); VF(" err="); V(error); VF(" count="); VL(count);
   
   lastA = stateA;
   lastB = stateB;
@@ -226,6 +228,7 @@ ICACHE_RAM_ATTR void Quadrature::B(const int16_t pin) {
     case 0b1111: dir = 0; error = true; break;
   }
   count += dir;
+    //VF("Bint warn="); V(warn); VF(" err="); V(error); VF(" count="); VL(count);
   
   lastA = stateA;
   lastB = stateB;
