@@ -1,13 +1,12 @@
 //
 // Created by artyfarty on 13.07.2024.
 //
-#if ENCODER_FOC_CONTROL == ON
-
-#include "EncoderFocControl.h"
-
 #include "../../Common.h"
 #include "../../lib/serial/Serial_Local.h"
 #include "../../lib/tasks/OnTask.h"
+#include "EncoderFocControl.h"
+
+#if ENCODER_FOC_CONTROL == ON
 
 #if ENCODER_FOC_CONTROL_ENCODER_TYPE == AB
 #include "../../lib/encoder/quadrature/Quadrature.h"

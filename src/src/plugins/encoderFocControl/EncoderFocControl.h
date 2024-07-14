@@ -1,9 +1,12 @@
 // Sample plugin
 #pragma once
+#include "../../Common.h"
 
 #ifndef ENCODER_FOC_CONTROL
 #define ENCODER_FOC_CONTROL OFF
 #endif
+
+#if ENCODER_FOC_CONTROL == ON
 
 #ifndef ENCODER_FOC_CONTROL_DIR
 #define ENCODER_FOC_CONTROL_DIR 1
@@ -52,3 +55,5 @@ private:
 };
 
 extern EncoderFocControl encoderFocControl;
+
+#endif

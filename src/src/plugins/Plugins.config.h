@@ -12,6 +12,7 @@
 
 // =================================================================================================================================
 #pragma once
+#include "../Common.h"
 
 #if ENCODER_FOC_CONTROL == ON
 #include "encoderFocControl/EncoderFocControl.h"
