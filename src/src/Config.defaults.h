@@ -2053,6 +2053,34 @@
   #endif
 #endif
 
+#ifndef AXIS1_DISABLE_PINS
+#define AXIS1_DISABLE_PINS OFF
+#endif
+#ifndef AXIS2_DISABLE_PINS
+#define AXIS2_DISABLE_PINS OFF
+#endif
+#ifndef AXIS3_DISABLE_PINS
+#define AXIS3_DISABLE_PINS OFF
+#endif
+#ifndef AXIS4_DISABLE_PINS
+#define AXIS4_DISABLE_PINS OFF
+#endif
+#ifndef AXIS5_DISABLE_PINS
+#define AXIS5_DISABLE_PINS OFF
+#endif
+#ifndef AXIS6_DISABLE_PINS
+#define AXIS6_DISABLE_PINS OFF
+#endif
+#ifndef AXIS7_DISABLE_PINS
+#define AXIS7_DISABLE_PINS OFF
+#endif
+#ifndef AXIS8_DISABLE_PINS
+#define AXIS8_DISABLE_PINS OFF
+#endif
+#ifndef AXIS9_DISABLE_PINS
+#define AXIS9_DISABLE_PINS OFF
+#endif
+
 #if defined(AXIS1_STEP_DIR_LEGACY) || defined(AXIS2_STEP_DIR_LEGACY) || defined(AXIS3_STEP_DIR_LEGACY) || \
     defined(AXIS4_STEP_DIR_LEGACY) || defined(AXIS5_STEP_DIR_LEGACY) || defined(AXIS6_STEP_DIR_LEGACY) || \
     defined(AXIS7_STEP_DIR_LEGACY) || defined(AXIS8_STEP_DIR_LEGACY) || defined(AXIS9_STEP_DIR_LEGACY)
