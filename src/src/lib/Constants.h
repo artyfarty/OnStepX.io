@@ -81,6 +81,7 @@
 #define ENC_FIRST                   1
 #define AB                          1      // AB quadrature encoder
 #define AB_ESP32                    2      // AB quadrature encoder (using fast ESP32 hardware decode)
+#define AB_STM32                    11     // AB quadrature encoder (using fast STM32 hardware decode)
 #define CW_CCW                      3      // clockwise/counter-clockwise encoder
 #define PULSE_DIR                   4      // pulse/direction encoder
 #define PULSE_ONLY                  5      // pulse only encoder (uses hint for direction)
@@ -89,7 +90,7 @@
 #define JTW_24BIT                   8      // JTW Trident BISS-C interface 24bit encoder
 #define JTW_26BIT                   9      // JTW Trident BISS-C interface 26bit encoder
 #define SERIAL_BRIDGE               10     // serial bridge to encoders
-#define ENC_LAST                    10
+#define ENC_LAST                    12
 
 // encoder filter types
 #define ENC_FILT_FIRST              1

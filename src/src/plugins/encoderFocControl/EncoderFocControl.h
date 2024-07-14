@@ -33,6 +33,12 @@
   #endif
 #endif
 
+#if ENCODER_FOC_CONTROL_ENCODER_TYPE == AB_STM32
+  #ifndef ENCODER_FOC_CONTROL_ENCODER_TIM
+  #error "Timer for STM32 encoder focus control not defined"
+  #endif
+#endif
+
 #ifndef ENCODER_FOC_CONTROL_ENCODER_AXIS
   #error "Define which axis number to take over in ENCODER_FOC_CONTROL_ENCODER_AXIS"
 #endif

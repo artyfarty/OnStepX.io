@@ -13,19 +13,22 @@
 Quadrature encControlAxis(ENCODER_FOC_CONTROL_ENCODER_PINA, ENCODER_FOC_CONTROL_ENCODER_PINB, ENCODER_FOC_CONTROL_ENCODER_AXIS);
 #elif ENCODER_FOC_CONTROL_ENCODER_TYPE == AB_ESP32
 #include "../../lib/encoder/quadratureEsp32/QuadratureEsp32.h"
-QuadratureEsp32 encControlAxis(SLEW_ENCODER_A_PIN, SLEW_ENCODER_B_PIN, 1);
+QuadratureEsp32 encControlAxis(ENCODER_FOC_CONTROL_ENCODER_PINA, ENCODER_FOC_CONTROL_ENCODER_PINB, 1);
+#elif ENCODER_FOC_CONTROL_ENCODER_TYPE == AB_STM32
+#include "../../lib/encoder/quadratureSTM32/QuadratureSTM32.h"
+QuadratureSTM32 encControlAxis(ENCODER_FOC_CONTROL_ENCODER_TIM);
 #elif ENCODER_FOC_CONTROL_ENCODER_TYPE == CW_CCW
 #include "../../lib/encoder/cwCcw/CwCcw.h"
-CwCcw encControlAxis(SLEW_ENCODER_A_PIN, SLEW_ENCODER_B_PIN, 1);
+CwCcw encControlAxis(ENCODER_FOC_CONTROL_ENCODER_PINA, ENCODER_FOC_CONTROL_ENCODER_PINB, 1);
 #elif ENCODER_FOC_CONTROL_ENCODER_TYPE == PULSE_DIR
 #include "../../lib/encoder/pulseDir/PulseDir.h"
-PulseDir encControlAxis(SLEW_ENCODER_A_PIN, SLEW_ENCODER_B_PIN, 1);
+PulseDir encControlAxis(ENCODER_FOC_CONTROL_ENCODER_PINA, ENCODER_FOC_CONTROL_ENCODER_PINB, 1);
 #elif ENCODER_FOC_CONTROL_ENCODER_TYPE == AS37_H39B_B
 #include "../../lib/encoder/bissc/As37h39bb.h"
-As37h39bb encControlAxis(SLEW_ENCODER_A_PIN, SLEW_ENCODER_B_PIN, 1);
+As37h39bb encControlAxis(ENCODER_FOC_CONTROL_ENCODER_PINA, ENCODER_FOC_CONTROL_ENCODER_PINB, 1);
 #elif ENCODER_FOC_CONTROL_ENCODER_TYPE == JTW_24BIT
 #include "../../lib/encoder/bissc/Jtw24.h"
-Jtw24 encControlAxis(SLEW_ENCODER_A_PIN, SLEW_ENCODER_B_PIN, 1);
+Jtw24 encControlAxis(ENCODER_FOC_CONTROL_ENCODER_PINA, ENCODER_FOC_CONTROL_ENCODER_PINB, 1);
 #endif
 
 void pollEncoders() { encoderFocControl.loop(); }
