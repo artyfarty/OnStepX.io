@@ -46,7 +46,6 @@ void EncoderFocControl::init() {
 
 void EncoderFocControl::loop() {
   long newPos = encControlAxis.read();
-  VF("MSG: encPos = "); VL(newPos);
   if (newPos == INT32_MAX) {
     enFault = true;
     VLF("MSG: Encoder fault");
@@ -57,6 +56,7 @@ void EncoderFocControl::loop() {
   newPos *= ENCODER_FOC_CONTROL_DIR;
 
   if (prevPos != newPos) {
+    VF("MSG: encPos = "); VL(newPos);
     should_slew = true;
     posDiff = newPos - prevPos;
     prevPos = newPos;
