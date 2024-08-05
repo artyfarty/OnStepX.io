@@ -11,6 +11,39 @@
 #include "dewHeater/DewHeater.h"
 #include "intervalometer/Intervalometer.h"
 
+#ifdef COVER_SWITCH_SERVO_PRESENT
+  #ifdef ESP32
+    #include <ESP32Servo.h>  // https://www.arduino.cc/reference/en/libraries/esp32servo/
+  #else
+    #include <Servo.h>
+  #endif
+  #ifndef COVER_SWITCH_SERVO_PERIOD_HZ
+    #define COVER_SWITCH_SERVO_PERIOD_HZ 50
+  #endif
+  #ifndef COVER_SWITCH_SERVO_SPEED_PERCENT
+    #define COVER_SWITCH_SERVO_SPEED_PERCENT 50
+  #endif
+  #ifndef COVER_SWITCH_SERVO_MIN
+    #define COVER_SWITCH_SERVO_MIN 1000
+  #endif
+  #ifndef COVER_SWITCH_SERVO_MAX
+    #define COVER_SWITCH_SERVO_MAX 2000
+  #endif
+  #ifndef COVER_SWITCH_SERVO_CLOSED_DEG
+    #define COVER_SWITCH_SERVO_CLOSED_DEG 0
+  #endif
+  #ifndef COVER_SWITCH_SERVO_OPEN_DEG
+    #define COVER_SWITCH_SERVO_OPEN_DEG 100
+  #endif
+
+  typedef struct DeviceCoverServo {
+    int target;
+    int position;
+    Servo *servo;
+  } DeviceCoverServo;
+
+#endif
+
 typedef struct Device {
    const char* name;
    int16_t purpose;
@@ -29,6 +62,8 @@ class Features {
     bool command(char *reply, char *command, char *parameter, bool *supressFrame, bool *numericReply, CommandError *commandError);
 
     void poll();
+
+    inline void deviceOff(int index) { device[index].value = 0; digitalWriteEx(device[index].pin, LOW); }
  
   private:
     int16_t auxPins[8] = { AUX1_PIN, AUX2_PIN, AUX3_PIN, AUX4_PIN, AUX5_PIN, AUX6_PIN, AUX7_PIN, AUX8_PIN };
@@ -42,7 +77,12 @@ class Features {
       { FEATURE7_NAME, FEATURE7_PURPOSE, FEATURE7_TEMP, FEATURE7_PIN, FEATURE7_VALUE_DEFAULT, FEATURE7_ON_STATE, NULL, NULL },
       { FEATURE8_NAME, FEATURE8_PURPOSE, FEATURE8_TEMP, FEATURE8_PIN, FEATURE8_VALUE_DEFAULT, FEATURE8_ON_STATE, NULL, NULL }
     };
-    uint8_t momentarySwitchTime[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    #ifdef COVER_SWITCH_SERVO_PRESENT
+      DeviceCoverServo cover[8] = {
+        { 0, 0, NULL }, { 0, 0, NULL }, { 0, 0, NULL }, { 0, 0, NULL }, { 0, 0, NULL }, { 0, 0, NULL }, { 0, 0, NULL }, { 0, 0, NULL }
+      };
+    #endif
+    uint8_t momentarySwitchTime[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 };
 
 extern Features features;

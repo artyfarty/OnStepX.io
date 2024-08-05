@@ -26,6 +26,11 @@
 #define SERIAL_DEBUG_BAUD             9600
 #endif
 
+// identification
+#ifndef CONFIG_NAME
+#define CONFIG_NAME "OnStepX"
+#endif
+
 // serial ports
 #ifndef SERIAL_A_BAUD_DEFAULT
 #define SERIAL_A_BAUD_DEFAULT         9600
@@ -38,6 +43,12 @@
 #endif
 #ifndef SERIAL_C_BAUD_DEFAULT
 #define SERIAL_C_BAUD_DEFAULT         OFF
+#endif
+#ifndef SERIAL_D_BAUD_DEFAULT
+#define SERIAL_D_BAUD_DEFAULT         OFF
+#endif
+#ifndef SERIAL_E_BAUD_DEFAULT
+#define SERIAL_E_BAUD_DEFAULT         OFF
 #endif
 #ifndef SERIAL_GPS_BAUD
 #define SERIAL_GPS_BAUD               9600
@@ -677,7 +688,10 @@
 
 // time and location
 #ifndef TIME_LOCATION_SOURCE
-#define TIME_LOCATION_SOURCE          OFF
+#define TIME_LOCATION_SOURCE          OFF                        // specify device to get date/time and optionally location
+#endif
+#ifndef TIME_LOCATION_SOURCE_FALLBACK                            // alternate TLS, must be differnet than above and not GPS or NTP
+#define TIME_LOCATION_SOURCE_FALLBACK OFF
 #endif
 #ifndef TIME_LOCATION_PPS_SENSE
 #define TIME_LOCATION_PPS_SENSE       OFF

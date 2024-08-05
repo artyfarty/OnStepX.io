@@ -253,9 +253,12 @@ bool Goto::command(char *reply, char *command, char *parameter, bool *supressFra
     //            Returns:
     //              0=destination is East of the pier
     //              1=destination is West of the pier
-    //              2=an error occured
+    //              2=destination is Unknown
     if (command[1] == 'D' && parameter[0] == 0) {
-      CommandError e = setTarget(&gotoTarget, settings.preferredPierSide);
+      Coordinate coords = gotoTarget;
+      coords.pierSide = PIER_SIDE_NONE;
+      transform.nativeToMount(&coords);
+      CommandError e = setTarget(&coords, settings.preferredPierSide);
       strcpy(reply, "2");
       if (e == CE_NONE && target.pierSide == PIER_SIDE_EAST) reply[0] = '0';
       if (e == CE_NONE && target.pierSide == PIER_SIDE_WEST) reply[0] = '1';

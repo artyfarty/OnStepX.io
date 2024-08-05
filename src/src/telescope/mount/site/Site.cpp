@@ -55,9 +55,9 @@ IRAM_ATTR void clockTickWrapper() { fracLAST++; }
     } else
 
     if ((long)(millis() - site.updateTimeoutTime) > 0) {
-      VLF("MSG: Mount, GPS timed out stopping monitor task");
+      VLF("WRN: Mount, GPS timed out stopping monitor task");
       tasks.setDurationComplete(tasks.getHandleByName("gpsChk"));
-      VLF("WRN: TLS, GPS timed out stopping monitor task");
+      VLF("WRN: TLS, GPS timed out stopping GPS polling task");
       tasks.setDurationComplete(tasks.getHandleByName("gpsPoll"));
       initError.tls = true; 
     }
@@ -127,6 +127,16 @@ void Site::init() {
   // get date/time from a TLS or NV
   #if TIME_LOCATION_SOURCE != OFF
 
+    #if TIME_LOCATION_SOURCE_FALLBACK == DS3231
+      tlsFallback = new TlsDs3231;
+    #elif TIME_LOCATION_SOURCE_FALLBACK == DS3234
+      tlsFallback = new TlsDs3234;
+    #elif TIME_LOCATION_SOURCE_FALLBACK == SD3031
+      tlsFallback = new TlsSd3031;
+    #elif TIME_LOCATION_SOURCE_FALLBACK == TEENSY
+      tlsFallback = new TlsTeensy;
+    #endif
+
     #if TIME_LOCATION_SOURCE == DS3231
       tls = new TlsDs3231;
     #elif TIME_LOCATION_SOURCE == DS3234
@@ -149,8 +159,6 @@ void Site::init() {
         timeIsReady = true;
         VLF("MSG: Mount, site get Date/Time from TLS");
       } else {
-        VLF("MSG: Site, falling back to Date/Time from NV");
-        readJD();
         #if TIME_LOCATION_SOURCE == GPS
           updateTimeoutTime = millis() + GPS_TIMEOUT_MINUTES*60000UL;
           VF("MSG: Site, start GPS check task (rate 5000ms priority 7)... ");
@@ -162,7 +170,22 @@ void Site::init() {
           if (tasks.add(5000, 0, true, 7, ntpCheck, "ntpChk")) { VLF("success"); } else { VLF("FAILED!"); }
         #endif
       }
-    } else {
+    }
+
+    #if TIME_LOCATION_SOURCE_FALLBACK != OFF
+      if (tlsFallback->init() && tlsFallback->isReady()) {
+        tlsFallback->get(ut1);
+        dateIsReady = true;
+        timeIsReady = true;
+        #if TIME_LOCATION_SOURCE_FALLBACK == DS3231
+          if (initError.tls) tlsFallback->ppsEnable();
+        #endif
+        initError.tls = false;
+        VLF("MSG: Mount, site get Date/Time from fallback TLS");
+      }
+    #endif
+
+    if (initError.tls) {
       DLF("WRN: Site::init(), Warning TLS initialization failed");
       VLF("WRN: Site::init(), fallback to last Date/Time from NV");
       readJD();
@@ -212,6 +235,9 @@ void Site::updateLocation() {
 void Site::updateTLS() {
   #if TIME_LOCATION_SOURCE != OFF
     tls->set(ut1);
+  #endif
+  #if TIME_LOCATION_SOURCE_FALLBACK != OFF
+    tlsFallback->set(ut1);
   #endif
 
   if (isDateTimeReady()) {
