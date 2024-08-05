@@ -2,15 +2,24 @@ OnStepX Telescope Controller
 ===========================
 
 # This fork
-In this fork i migrated the project to platform.io. I use it on BTT SKR, so only this env is currently available. I have no plans for LTS, but i will add features that i need.
+In this fork i migrated the project to platform.io. I use it on BTT SKR, so only this env is currently available. I have no plans for LTS, but i will add features that i need. Please don't expect me to maintain this fork forever.
 
-## Current features:
+**P.io makes flashing more easy reproducible for tech-savvy person familiar with IDEs, build environments, dependency management etc.
+If you are not, you better use original Howard's version and follow instructions in official wiki.**
+
+## Current features
 * Config files can be under .gitignore
 * You can set focuser home positions to min or max, not only middle.
 
-## Planned:
+## Planned features
 * Fix flashing of ESP8266 over SKR
-* Implement controlling axes via encoder wheels (may as well do it in SHC)
+* Implement controlling focuser (and maybe other axis) via encoder wheel
+
+# Configuration
+This version expects you to create Extended.userconfig.h and Userconfig.h instead of editing VCS-tracked files. Some defines are in pio ini file.
+
+# Flashing
+Use any IDE (VScode, CLion) with platform.io plugin, or raw platform.io cli to flash your device. Choose the corresponding build env from pio ini, or create your own.
 
 # What is OnStepX?
 OnStepX is the advanced version of the OnStep computerized telescope controller with support for interfacing with/controlling a variety of motor drivers (and so motors) including Step/Dir, ODrive, and Servo (a combination of encoder and DC motor or Stepper motor) types.
