@@ -145,6 +145,10 @@ bool Site::command(char *reply, char *command, char *parameter, bool *supressFra
         dateIsReady = true;
         setDateTime(localToUT1(calendars.gregorianToJulian(local)));        
         updateTLS();
+        #ifdef LX200_COMPAT_SC
+        sprintf(reply,"%s", "1Updating planetary data. # ");
+        *numericReply = false;
+        #endif
       } else *commandError = CE_PARAM_FORM;
     } else
 
