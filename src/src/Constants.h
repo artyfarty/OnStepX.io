@@ -51,11 +51,6 @@
 #define BMP280_SPI                  6      // BMP280 on SPI (default CS)
 #define WEATHER_LAST                6
 
-// FOCUSER_HOME_POSITION
-#define H_MIN                       1
-#define H_MIDDLE                    5
-#define H_MAX                       10
-
 // STEP WAVE FORM
 #define STEP_WAVE_FORM_FIRST        1
 #define SQUARE                      1

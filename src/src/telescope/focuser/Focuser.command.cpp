@@ -8,14 +8,6 @@
 #include "../../lib/convert/Convert.h"
 #include "../../lib/axis/Axis.h"
 
-#if FOCUSER_HOME_POSITION == H_MIN
-#define FOCUSER_HOME() round(axes[index]->settings.limits.min)*MicronsToSteps
-#elif FOCUSER_HOME_POSITION == H_MIDDLE
-#define FOCUSER_HOME() round((axes[index]->settings.limits.max + axes[index]->settings.limits.min)/2.0F)*MicronsToSteps
-#elif FOCUSER_HOME_POSITION == H_MAX
-#define FOCUSER_HOME() round(axes[index]->settings.limits.max)*MicronsToSteps
-#endif
-
 extern Axis *axes[6];
 
 bool Focuser::command(char *reply, char *command, char *parameter, bool *supressFrame, bool *numericReply, CommandError *commandError) {
@@ -318,17 +310,17 @@ bool Focuser::command(char *reply, char *command, char *parameter, bool *supress
       *numericReply = false;
     } else
 
-    // :FH#       Set focuser position to home
+    // :FH#       Set focuser position as half-travel
     //            Returns: Nothing
     if (command[1] == 'H') {
       settings[index].parkState = PS_UNPARKED;
-      long p = FOCUSER_HOME();
+      long p = round((axes[index]->settings.limits.max + axes[index]->settings.limits.min)/2.0F)*MicronsToSteps;
       *commandError = axes[index]->resetPositionSteps(p);
       axes[index]->setBacklash(getBacklash(index));
       *numericReply = false;
     } else
 
-    // :Fh#       Move focuser target position to home
+    // :Fh#       Move focuser target position to half-travel
     //            Returns: Nothing
     if (command[1] == 'h') {
       if (axes[index]->hasHomeSense()) {
@@ -340,7 +332,7 @@ bool Focuser::command(char *reply, char *command, char *parameter, bool *supress
           }
         } else *commandError = CE_PARKED;
       } else {
-        long t = FOCUSER_HOME();
+        long t = round((axes[index]->settings.limits.max + axes[index]->settings.limits.min)/2.0F)*MicronsToSteps;
         *commandError = gotoTarget(index, t);
       }
       *numericReply = false;
