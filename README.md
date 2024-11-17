@@ -9,7 +9,6 @@ If you are not, you better use original Howard's version and follow instructions
 
 ## Current features
 * Config files can be under .gitignore
-* You can set focuser home positions to min or max, not only middle.
 
 ## Planned features
 * Fix flashing of ESP8266 over SKR
