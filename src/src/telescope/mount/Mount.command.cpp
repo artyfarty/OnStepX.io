@@ -414,23 +414,22 @@ bool Mount::command(char *reply, char *command, char *parameter, bool *supressFr
       if (settings.rc == RC_REFRACTION) settings.rc = RC_REFRACTION_DUAL; else
       if (settings.rc == RC_MODEL) settings.rc = RC_MODEL_DUAL;
     } else
-    if (command[1] == 'S') { settings.rc = RC_NONE; trackingRate = hzToSidereal(60.0F); } else
-    if (command[1] == 'K') { settings.rc = RC_NONE; trackingRate = hzToSidereal(60.136F); } else
-    if (command[1] == 'L') { settings.rc = RC_NONE; trackingRate = hzToSidereal(57.9F); } else
+    if (command[1] == 'S') { settings.rc = RC_NONE; trackingRate = hzToSidereal(SOLAR_RATE_HZ); } else
+    if (command[1] == 'K') { settings.rc = RC_NONE; trackingRate = hzToSidereal(KING_RATE_HZ); } else
+    if (command[1] == 'L') { settings.rc = RC_NONE; trackingRate = hzToSidereal(LUNAR_RATE_HZ); } else
     if (command[1] == 'Q') { trackingRate = hzToSidereal(SIDEREAL_RATE_HZ); } else
     if (command[1] == '+') { site.setSiderealPeriod(site.getSiderealPeriod() - hzToSubMicros(0.02F)); } else
     if (command[1] == '-') { site.setSiderealPeriod(site.getSiderealPeriod() + hzToSubMicros(0.02F)); } else
     if (command[1] == 'R') { site.setSiderealPeriod(SIDEREAL_PERIOD); } else
     if (command[1] == 'e') {
-      if (transform.isEquatorial() || site.isDateTimeReady()) {
-        #if GOTO_FEATURE == ON
-          if (park.state != PS_PARKED) tracking(true); else *commandError = CE_PARKED;
-        #else
-          tracking(true);
-        #endif
-      } else {
-        *commandError = CE_REPLY_UNKNOWN;
-      }
+      #if GOTO_FEATURE == ON
+        if (park.state != PS_PARKED) {
+      #endif
+      tracking(true);
+      if (!limits.isEnabled()) tracking(false);
+      #if GOTO_FEATURE == ON
+        } else *commandError = CE_PARKED;
+      #endif
     } else
     if (command[1] == 'd') {
       tracking(false);

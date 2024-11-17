@@ -314,15 +314,15 @@ void ServoMotor::poll() {
   velocityPercent = (driver->setMotorVelocity(velocity)/driver->getMotorControlRange()) * 100.0F;
   if (driver->getMotorDirection() == DIR_FORWARD) control->directionHint = 1; else control->directionHint = -1;
 
-  if (feedback->useVariableParameters) {
-    feedback->variableParameters(fabs(velocityPercent));
-  } else {
+  if (feedback->autoScaleParameters) {
     if (!slewing && enabled) {
       if ((long)(millis() - lastSlewingTime) > SERVO_SLEWING_TO_TRACKING_DELAY) feedback->selectTrackingParameters(); else feedback->selectSlewingParameters();
     } else {
       lastSlewingTime = millis();
       feedback->selectSlewingParameters();
     } 
+  } else {
+    feedback->variableParameters(fabs(velocityPercent));
   }
 
   // if the driver has shutdown itself we should also shutdown
@@ -338,8 +338,8 @@ void ServoMotor::poll() {
   if (millis() - lastCheckTime > 2000) {
 
     #ifndef SERVO_SAFETY_DISABLE
-      // if above 33% power and we're not moving something is seriously wrong, so shut it down
-      if (labs(encoderCounts - lastEncoderCounts) < 10 && abs(velocityPercent) >= 33) {
+      // if above SERVO_SAFETY_STALL_POWER (33% default) and we're not moving something is seriously wrong, so shut it down
+      if (labs(encoderCounts - lastEncoderCounts) < 10 && abs(velocityPercent) >= SERVO_SAFETY_STALL_POWER) {
         D(axisPrefixWarn);
         D("stall detected!"); D(" control->in = "); D(control->in); D(", control->set = "); D(control->set);
         D(", control->out = "); D(control->out); D(", velocity % = "); DL(velocityPercent);

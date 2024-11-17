@@ -210,7 +210,7 @@ CommandError Home::reset(bool fullReset) {
 
   // stop tracking and set default rate
   mount.tracking(false);
-  mount.trackingRate = hzToSidereal(SIDEREAL_RATE_HZ);
+  mount.trackingRate = hzToSidereal(TRACKING_RATE_DEFAULT_HZ);
   mount.trackingRateOffsetRA = 0.0F;
   mount.trackingRateOffsetDec = 0.0F;
   goTo.firstGoto = true;
@@ -229,7 +229,7 @@ CommandError Home::reset(bool fullReset) {
     position.a2 = position.d;
   }
 
-  if (!goTo.absoluteEncodersPresent || mount.isHome()) {
+  if (!goTo.absoluteEncodersPresent) {
     if (axis1.resetPosition(0.0L) != 0) { DL("WRN: Home::reset(), failed to resetPosition Axis1"); }
     if (axis2.resetPosition(0.0L) != 0) { DL("WRN: Home::reset(), failed to resetPosition Axis2"); }
 
@@ -276,7 +276,7 @@ Coordinate Home::getPosition(CoordReturn coordReturn) {
     case CR_MOUNT_EQU:
       if (transform.mountType == ALTAZM) transform.horToEqu(&position);
       if (transform.mountType == ALTALT) transform.aaToEqu(&position);
-      transform.hourAngleToRightAscension(&position, false);
+      transform.hourAngleToRightAscension(&position, true);
     break;
     case CR_MOUNT_ALT:
     case CR_MOUNT_HOR:
@@ -286,7 +286,7 @@ Coordinate Home::getPosition(CoordReturn coordReturn) {
     case CR_MOUNT_ALL:
       if (transform.mountType == ALTAZM) transform.horToEqu(&position); else
       if (transform.mountType == ALTALT) transform.aaToEqu(&position); else transform.equToHor(&position);
-      transform.hourAngleToRightAscension(&position, false);
+      transform.hourAngleToRightAscension(&position, true);
     break;
   }
   return position;

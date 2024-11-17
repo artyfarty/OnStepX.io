@@ -44,13 +44,17 @@ void Thermistor::poll() {
     if (device[index] == THERMISTOR2) thermistorType = 1;
 
     if (thermistorType >= 0 && devicePin[index] != OFF) {
-      // get the total resistance
-      int counts = analogRead(devicePin[index]);
+
+      #ifdef ESP32
+        int counts = round((analogReadMilliVolts(devicePin[index])/3300.0F)*(float)ANALOG_READ_RANGE);
+      #else
+        int counts = analogRead(devicePin[index]);
+      #endif
 
       // calculate the device resistance
       float resistance;
 
-      // handle special case where we add a resistor (say 10k) parallel to the (say 10k 3950) thermistor
+      // handle special case where we add a resistor (say 10k) parallel to the thermistor (say 10k 3950)
       #ifdef THERMISTOR_RPARALLEL
         float voltage = (counts/(float)ANALOG_READ_RANGE)*3.3F;
         float RtLow = settings[thermistorType].rNom/30.0F;
